@@ -1,6 +1,7 @@
 import tempfile
 import pandas as pd
 import tensorflow as tf
+import os
 
 def input_fn(df):
   # Creates a dictionary mapping from each continuous feature column name (k) to
@@ -33,7 +34,6 @@ def eval_input_fn():
 
 
 train_file = "./london_101.csv"
-test_file = "./london_101_test.csv"
 COLUMNS = ["day", "month", "minute", "status"]
 LABEL_COLUMN = "label"
 CATEGORICAL_COLUMNS = ["day", "month"]
@@ -54,7 +54,10 @@ month = tf.contrib.layers.sparse_column_with_keys(
 minute = tf.contrib.layers.real_valued_column("minute")
 
 #create the model
-model_dir = tempfile.mkdtemp()
+model_dir = './models/london_101'
+if not os.path.exists(model_dir):
+    os.makedirs(model_dir)
+
 m = tf.contrib.learn.LinearClassifier(feature_columns=[day, month, minute], model_dir=model_dir)
 
 #train the model
